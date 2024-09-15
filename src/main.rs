@@ -35,13 +35,13 @@ fn convert_temp(
     output_unit: &Unit,
 ) -> temperature::Temperature {
     match (input_unit, output_unit) {
-        (Unit::Celcius, Unit::Celcius) => temp,
+        (Unit::Celcius, Unit::Celcius)
+        | (Unit::Farenheit, Unit::Farenheit)
+        | (Unit::Kelvin, Unit::Kelvin) => temp,
         (Unit::Celcius, Unit::Farenheit) => temperature::celcius_to_fahrenheit(temp),
         (Unit::Celcius, Unit::Kelvin) => temperature::celcius_to_kelvin(temp),
-        (Unit::Farenheit, Unit::Farenheit) => temp,
         (Unit::Farenheit, Unit::Celcius) => temperature::fahrenheit_to_celcius(temp),
         (Unit::Farenheit, Unit::Kelvin) => temperature::fahrenheit_to_kelvin(temp),
-        (Unit::Kelvin, Unit::Kelvin) => temp,
         (Unit::Kelvin, Unit::Celcius) => temperature::kelvin_to_celcius(temp),
         (Unit::Kelvin, Unit::Farenheit) => temperature::kelvin_to_fahrenheit(temp),
     }
