@@ -1,25 +1,37 @@
+//! Temperature conversion functions.
+//!
+//! The functions in this module convert temperatures between Celcius, Fahrenheit and Kelvin.
+//!
+
+/// Temperature type.
 pub type Temperature = f64;
 
+/// Convert Celcius to Fahrenheit.
 pub fn celcius_to_fahrenheit(c: Temperature) -> Temperature {
     (c * 9.0 / 5.0) + 32.0
 }
 
+/// Convert Fahrenheit to Celcius.
 pub fn fahrenheit_to_celcius(f: Temperature) -> Temperature {
     (f - 32.0) * 5.0 / 9.0
 }
 
+/// Convert Kelvin to Celcius.
 pub fn kelvin_to_celcius(k: Temperature) -> Temperature {
     k - 273.15
 }
 
+/// Convert Celcius to Kelvin.
 pub fn celcius_to_kelvin(c: Temperature) -> Temperature {
     c + 273.15
 }
 
+/// Convert Fahrenheit to Kelvin.
 pub fn fahrenheit_to_kelvin(f: Temperature) -> Temperature {
     celcius_to_kelvin(fahrenheit_to_celcius(f))
 }
 
+/// Convert Kelvin to Fahrenheit.
 pub fn kelvin_to_fahrenheit(k: Temperature) -> Temperature {
     celcius_to_fahrenheit(kelvin_to_celcius(k))
 }

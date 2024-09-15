@@ -1,16 +1,26 @@
+//! This is the main file for the temperature conversion cli tool.
+
 use clap::Parser;
 
 mod cli;
 mod temperature;
 
+/// The possible units for temperature conversion.
 #[derive(Debug)]
 enum Unit {
+    /// Celsius unit.
     Celcius,
+    /// Fahrenheit unit.
     Farenheit,
+    /// Kelvin unit.
     Kelvin,
 }
 
 impl Unit {
+    /// Parse a string to a unit.
+    ///
+    /// # Errors
+    /// Returns an error if the string is not a valid unit.
     fn from_str(s: &str) -> Result<Self, String> {
         match s {
             cli::CELCIUS_SHORT_NAME => Ok(Unit::Celcius),
@@ -20,6 +30,7 @@ impl Unit {
         }
     }
 
+    /// Get the string representation of the unit.
     fn to_str_unit(&self) -> &'static str {
         match self {
             Unit::Celcius => "°C",
@@ -29,24 +40,32 @@ impl Unit {
     }
 }
 
+/// Convert a temperature from one unit to another.
+///
+/// # Errors
+/// Returns an error if the conversion is not possible.
 fn convert_temp(
     temp: temperature::Temperature,
     input_unit: &Unit,
     output_unit: &Unit,
-) -> temperature::Temperature {
+) -> Result<temperature::Temperature, String> {
     match (input_unit, output_unit) {
         (Unit::Celcius, Unit::Celcius)
         | (Unit::Farenheit, Unit::Farenheit)
-        | (Unit::Kelvin, Unit::Kelvin) => temp,
-        (Unit::Celcius, Unit::Farenheit) => temperature::celcius_to_fahrenheit(temp),
-        (Unit::Celcius, Unit::Kelvin) => temperature::celcius_to_kelvin(temp),
-        (Unit::Farenheit, Unit::Celcius) => temperature::fahrenheit_to_celcius(temp),
-        (Unit::Farenheit, Unit::Kelvin) => temperature::fahrenheit_to_kelvin(temp),
-        (Unit::Kelvin, Unit::Celcius) => temperature::kelvin_to_celcius(temp),
-        (Unit::Kelvin, Unit::Farenheit) => temperature::kelvin_to_fahrenheit(temp),
+        | (Unit::Kelvin, Unit::Kelvin) => Ok(temp),
+        (Unit::Celcius, Unit::Farenheit) => Ok(temperature::celcius_to_fahrenheit(temp)),
+        (Unit::Celcius, Unit::Kelvin) => Ok(temperature::celcius_to_kelvin(temp)),
+        (Unit::Farenheit, Unit::Celcius) => Ok(temperature::fahrenheit_to_celcius(temp)),
+        (Unit::Farenheit, Unit::Kelvin) => Ok(temperature::fahrenheit_to_kelvin(temp)),
+        (Unit::Kelvin, Unit::Celcius) => Ok(temperature::kelvin_to_celcius(temp)),
+        (Unit::Kelvin, Unit::Farenheit) => Ok(temperature::kelvin_to_fahrenheit(temp)),
     }
 }
 
+/// The main function for the cli tool.
+///
+/// # Errors
+/// Returns an error if the conversion is not possible.
 fn main() -> Result<(), String> {
     let args = cli::Args::parse_from(std::env::args());
     let input_unit = Unit::from_str(&args.input_unit)?;
@@ -56,7 +75,7 @@ fn main() -> Result<(), String> {
         "input={temp:?}, input_unit={input_unit:?}, output_unit={output_unit:?}",
         temp = args.temperature
     );
-    let output = convert_temp(args.temperature, &input_unit, &output_unit);
+    let output = convert_temp(args.temperature, &input_unit, &output_unit)?;
     println!(
         "output={output:?}{unit}",
         output = output,
