@@ -47,10 +47,11 @@ fn convert_temp(
     }
 }
 
-fn main() {
+fn main() -> Result<(), String> {
     let args = cli::Args::parse_from(std::env::args());
-    let input_unit = Unit::from_str(&args.input_unit).unwrap();
-    let output_unit = Unit::from_str(&args.output_unit).unwrap();
+    let input_unit = Unit::from_str(&args.input_unit)?;
+    let output_unit = Unit::from_str(&args.output_unit)?;
+
     println!(
         "input={temp:?}, input_unit={input_unit:?}, output_unit={output_unit:?}",
         temp = args.temperature
@@ -61,4 +62,6 @@ fn main() {
         output = output,
         unit = output_unit.to_str_unit()
     );
+
+    Ok(())
 }
