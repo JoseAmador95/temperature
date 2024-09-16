@@ -44,11 +44,7 @@ impl Unit {
 ///
 /// # Errors
 /// Returns an error if the conversion is not possible.
-fn convert_temp(
-    temp: temperature::Temperature,
-    input_unit: &Unit,
-    output_unit: &Unit,
-) -> Result<temperature::Temperature, String> {
+fn convert_temp(temp: f64, input_unit: &Unit, output_unit: &Unit) -> Result<f64, String> {
     match (input_unit, output_unit) {
         (Unit::Celcius, Unit::Celcius)
         | (Unit::Farenheit, Unit::Farenheit)
