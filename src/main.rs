@@ -44,17 +44,17 @@ impl Unit {
 ///
 /// # Errors
 /// Returns an error if the conversion is not possible.
-fn convert_temp(temp: f64, input_unit: &Unit, output_unit: &Unit) -> Result<f64, String> {
+fn convert_temp(temp: f64, input_unit: &Unit, output_unit: &Unit) -> f64 {
     match (input_unit, output_unit) {
         (Unit::Celcius, Unit::Celcius)
         | (Unit::Farenheit, Unit::Farenheit)
-        | (Unit::Kelvin, Unit::Kelvin) => Ok(temp),
-        (Unit::Celcius, Unit::Farenheit) => Ok(temperature::celcius_to_fahrenheit(temp)),
-        (Unit::Celcius, Unit::Kelvin) => Ok(temperature::celcius_to_kelvin(temp)),
-        (Unit::Farenheit, Unit::Celcius) => Ok(temperature::fahrenheit_to_celcius(temp)),
-        (Unit::Farenheit, Unit::Kelvin) => Ok(temperature::fahrenheit_to_kelvin(temp)),
-        (Unit::Kelvin, Unit::Celcius) => Ok(temperature::kelvin_to_celcius(temp)),
-        (Unit::Kelvin, Unit::Farenheit) => Ok(temperature::kelvin_to_fahrenheit(temp)),
+        | (Unit::Kelvin, Unit::Kelvin) => temp,
+        (Unit::Celcius, Unit::Farenheit) => temperature::celcius_to_fahrenheit(temp),
+        (Unit::Celcius, Unit::Kelvin) => temperature::celcius_to_kelvin(temp),
+        (Unit::Farenheit, Unit::Celcius) => temperature::fahrenheit_to_celcius(temp),
+        (Unit::Farenheit, Unit::Kelvin) => temperature::fahrenheit_to_kelvin(temp),
+        (Unit::Kelvin, Unit::Celcius) => temperature::kelvin_to_celcius(temp),
+        (Unit::Kelvin, Unit::Farenheit) => temperature::kelvin_to_fahrenheit(temp),
     }
 }
 
@@ -71,7 +71,7 @@ fn main() -> Result<(), String> {
         "input={temp:?}, input_unit={input_unit:?}, output_unit={output_unit:?}",
         temp = args.temperature
     );
-    let output = convert_temp(args.temperature, &input_unit, &output_unit)?;
+    let output = convert_temp(args.temperature, &input_unit, &output_unit);
     println!(
         "output={output:?}{unit}",
         output = output,
